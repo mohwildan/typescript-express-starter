@@ -1,34 +1,60 @@
-import { type users } from '@prisma/client';
+import type { Request, Response } from 'express';
+import { Prisma, PrismaClient } from '@prisma/client';
 import prisma from '@/lib/prisma';
-import { Request, Response } from 'express';
 
 export default class UserService {
-  async createUser(data: users) {
-    const user = await prisma.users.create({ data });
-    return user;
+  prisma: PrismaClient;
+  req: Request;
+  res: Response;
+  body: Request['body'];
+  params: Request['params'];
+  constructor(req: Request, res: Response) {
+    this.prisma = prisma;
+    this.req = req;
+    this.res = res;
+    this.body = req.body;
+    this.params = req.params;
   }
 
-  async list(req: Request, res: Response) {
-    const { search, sort, sort_field } = req.query;
-    const filterRepo: any = {};
-    const pages: number = Number(req.query.page) || 1;
-    const limit: number = Number(req.query.limit) || 10;
+  create = async () => {
+    const { name, email, phone } = this.body;
+    const payload: Prisma.usersCreateArgs = {
+      data: {
+        name,
+        email,
+        phone,
+      },
+    };
+
+    await this.prisma.users.create(payload);
+    this.res.json({ message: 'success' });
+  };
+
+  list = async () => {
+    const { search, sort, sort_field } = this.req.query;
+    const filterRepo: Prisma.usersFindManyArgs = {};
+    const pages: number = Number(this.req.query.page) || 1;
+    const limit: number = Number(this.req.query.limit) || 10;
     const take: number = (pages - 1) * limit;
 
     if (typeof search !== 'undefined') {
+      // filter realtime
       filterRepo.where = {
-        name: search,
+        name: {
+          contains: search as string,
+        },
       };
     }
+
     if (typeof sort !== 'undefined' && typeof sort_field !== 'undefined') {
       filterRepo.orderBy = {
-        [sort_field as string]: sort,
+        [sort_field as Prisma.UsersScalarFieldEnum]: sort,
       };
     }
 
     filterRepo.take = limit;
     filterRepo.skip = take;
-    const list = await prisma.users.findMany(filterRepo);
+    const list = await this.prisma.users.findMany(filterRepo);
     const result = {
       list,
       total_page: Math.ceil(list.length / limit),
@@ -36,6 +62,6 @@ export default class UserService {
       page: pages,
       limit,
     };
-    res.json(result);
-  }
+    this.res.json(result);
+  };
 }

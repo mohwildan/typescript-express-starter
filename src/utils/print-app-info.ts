@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import { HR } from './helper';
-import appConfig from '@/config/app.config';
 import environment from '@/lib/environment';
 import { logWithoutConsole } from '@/lib/logger';
 
@@ -12,15 +11,7 @@ const label = (text: string): string => {
   return `${icon} ${labelChalk(text)}`;
 };
 
-export const printAppInfo = (
-  port: number,
-  env: string,
-  appUrl: string,
-  apiUrl: string
-) => {
-  const {
-    docs: { swaggerUIPath, apiDocsPath },
-  } = appConfig;
+export const printAppInfo = (port: number, env: string, appUrl: string) => {
   const divider = HR('blue', '~', 55);
   const urlChalk = chalk.underline.blue;
   const serverSuccessMessage = primaryChalk.bold(
@@ -33,9 +24,6 @@ export const printAppInfo = (
     \r${label('Port')}: ${primaryChalk(port)}\n
     \r${label('ENV')}: ${primaryChalk(env)}\n
     \r${label('App URL')}: ${urlChalk(appUrl)}\n
-    \r${label('Api URL')}: ${urlChalk(apiUrl)}\n
-    \r${label('Swagger')}: ${urlChalk(`${appUrl}${swaggerUIPath}`)}\n
-    \r${label('API Specs')}: ${urlChalk(`${appUrl}${apiDocsPath}`)}\n
     \r${divider}
   `);
   if (!environment.isDev()) {

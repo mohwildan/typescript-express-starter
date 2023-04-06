@@ -1,11 +1,10 @@
 import { Router } from 'express';
-import Controller from './users.controller';
+import UserController from './users.controller';
 import { CreateUserDto } from '@/dto/user.dto';
 import RequestValidator from '@/middlewares/request-validator';
 import { verifyAuthToken } from '@/middlewares/auth';
 
 const users: Router = Router();
-const controller = new Controller();
 
 /**
  * Create user body
@@ -34,8 +33,8 @@ users.post(
   '/create',
   verifyAuthToken,
   RequestValidator.validate(CreateUserDto),
-  controller.createUser
+  UserController.create
 );
-users.get('/list', controller.list);
+users.get('/list', UserController.list);
 
 export default users;
