@@ -36,3 +36,20 @@ export const envFileNotFoundError = (key: CommonEnvKeys): string => {
     \r${divider}
   `;
 };
+export const malform = async (tar: any): Promise<any> => {
+  const obj = {};
+  tar = tar.replace(/^\{|\}$/g, '').split(',');
+  for (let i = 0, cur: any, pair: any; (cur = tar[i]); i++) {
+    pair = cur.split(':');
+    obj[pair[0]] = /^\d*$/.test(pair[1]) ? +pair[1] : pair[1];
+  }
+  return obj;
+};
+export const isJsonString = (str: string): boolean => {
+  try {
+    JSON.parse(str);
+  } catch (e) {
+    return false;
+  }
+  return true;
+};

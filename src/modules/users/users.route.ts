@@ -3,8 +3,11 @@ import UserController from './users.controller';
 import { CreateUserDto } from '@/dto/user.dto';
 import RequestValidator from '@/middlewares/request-validator';
 import { verifyAuthToken } from '@/middlewares/auth';
+import { Validation } from '@/middlewares/validation';
 
 const users: Router = Router();
+const usersControler = new UserController();
+const { saveService } = new Validation();
 
 /**
  * Create user body
@@ -33,8 +36,9 @@ users.post(
   '/create',
   verifyAuthToken,
   RequestValidator.validate(CreateUserDto),
-  UserController.create
+  usersControler.create
 );
-users.get('/list', UserController.list);
+users.get('/list', saveService, usersControler.list);
+users.get('/detail/:id', saveService, usersControler.detail);
 
 export default users;

@@ -1,6 +1,9 @@
 import type { Request, Response } from 'express';
 import { Prisma, PrismaClient } from '@prisma/client';
 import prisma from '@/lib/prisma';
+import { ResponseData } from '@/utils/response';
+import Message from '@/utils/message';
+import ApiPost from '@/lib/api/service/post';
 
 export default class UserService {
   prisma: PrismaClient;
@@ -8,12 +11,18 @@ export default class UserService {
   res: Response;
   body: Request['body'];
   params: Request['params'];
+  response: ResponseData;
+  message: Message;
+  servicesPost: ApiPost;
   constructor(req: Request, res: Response) {
     this.prisma = prisma;
     this.req = req;
     this.res = res;
     this.body = req.body;
     this.params = req.params;
+    this.response = new ResponseData();
+    this.message = new Message();
+    this.servicesPost = req.app.locals.services.post;
   }
 
   create = async () => {
@@ -27,7 +36,7 @@ export default class UserService {
     };
 
     await this.prisma.users.create(payload);
-    this.res.json({ message: 'success' });
+    await this.response.success(null, 'success', this.res);
   };
 
   list = async () => {
@@ -35,10 +44,9 @@ export default class UserService {
     const filterRepo: Prisma.usersFindManyArgs = {};
     const pages: number = Number(this.req.query.page) || 1;
     const limit: number = Number(this.req.query.limit) || 10;
-    const take: number = (pages - 1) * limit;
+    const skip: number = (pages - 1) * limit;
 
     if (typeof search !== 'undefined') {
-      // filter realtime
       filterRepo.where = {
         name: {
           contains: search as string,
@@ -53,7 +61,7 @@ export default class UserService {
     }
 
     filterRepo.take = limit;
-    filterRepo.skip = take;
+    filterRepo.skip = skip;
     const list = await this.prisma.users.findMany(filterRepo);
     const result = {
       list,
@@ -62,6 +70,15 @@ export default class UserService {
       page: pages,
       limit,
     };
-    this.res.json(result);
+    await this.response.success(result, 'success', this.res);
+  };
+
+  detail = async () => {
+    const { id } = this.params;
+    const user = await this.prisma.users.findUnique({ where: { id } });
+    if (!user) {
+      await this.response.failed(null, this.message.notFound('user'), this.res);
+    }
+    await this.response.success(user, 'success', this.res);
   };
 }
