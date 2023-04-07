@@ -24,6 +24,7 @@
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/strict-boolean-expressions": "off",
     "@typescript-eslint/restrict-template-expressions": "off",
+    "@typescript-eslint/restrict-plus-operands": "off",
     "import/order": "error",
     "@typescript-eslint/naming-convention": "off"
   },

@@ -1,13 +1,12 @@
 import { Router } from 'express';
 import UserController from './users.controller';
-import { CreateUserDto } from '@/dto/user.dto';
-import RequestValidator from '@/middlewares/request-validator';
-import { verifyAuthToken } from '@/middlewares/auth';
 import { Validation } from '@/middlewares/validation';
+import { UserSchema } from '@/schema/user.schema';
 
 const users: Router = Router();
 const usersControler = new UserController();
-const { saveService } = new Validation();
+const { validation } = new Validation();
+const usersSchema = new UserSchema();
 
 /**
  * Create user body
@@ -32,13 +31,8 @@ const { saveService } = new Validation();
  * @param {CreateUserBody} request.body.required
  * @return {User} 201 - user created
  */
-users.post(
-  '/create',
-  verifyAuthToken,
-  RequestValidator.validate(CreateUserDto),
-  usersControler.create
-);
-users.get('/list', saveService, usersControler.list);
-users.get('/detail/:id', saveService, usersControler.detail);
+users.post('/create', validation(usersSchema.post), usersControler.create);
+users.get('/list', validation(null), usersControler.list);
+users.get('/detail/:id', validation(null), usersControler.detail);
 
 export default users;

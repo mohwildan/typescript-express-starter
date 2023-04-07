@@ -3,10 +3,8 @@ import nocache from 'nocache';
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import expressJSDocSwagger from 'express-jsdoc-swagger';
 import home from './home';
 // import environment from './lib/environment';
-import expressJSDocSwaggerConfig from './config/express-jsdoc-swagger.config';
 import appConfig from './config/app.config';
 import errorHandler from '@/middlewares/error-handler';
 import routes from '@/modules/index';
@@ -21,7 +19,6 @@ class App {
     this.disableSettings();
     this.setRoutes();
     this.setErrorHandler();
-    this.initializeDocs();
   }
 
   private setMiddlewares(): void {
@@ -48,10 +45,6 @@ class App {
 
   private setErrorHandler(): void {
     this.express.use(errorHandler);
-  }
-
-  private initializeDocs(): void {
-    expressJSDocSwagger(this.express)(expressJSDocSwaggerConfig);
   }
 
   public async connectPrisma(): Promise<void> {

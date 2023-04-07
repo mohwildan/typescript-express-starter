@@ -75,10 +75,20 @@ export default class UserService {
 
   detail = async () => {
     const { id } = this.params;
-    const user = await this.prisma.users.findUnique({ where: { id } });
-    if (!user) {
-      await this.response.failed(null, this.message.notFound('user'), this.res);
+    try {
+      const user = await this.prisma.users.findUnique({ where: { id } });
+      if (!user) {
+        return await this.response.failed(
+          null,
+          this.message.notFound('user'),
+          this.res
+        );
+      }
+
+      await this.response.success(user, 'success', this.res);
+    } catch (e) {
+      console.log(e);
+      await this.response.failed({}, e.message, this.res);
     }
-    await this.response.success(user, 'success', this.res);
   };
 }
