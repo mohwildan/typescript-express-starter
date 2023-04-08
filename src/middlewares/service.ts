@@ -1,7 +1,7 @@
 import { Request } from 'express';
 import { HttpContext } from '../lib/api/httpContext';
 
-export class Service {
+class Services {
   service_post = new HttpContext({
     baseUrl: 'https://pokeapi.co',
   });
@@ -12,3 +12,4 @@ export class Service {
     };
   };
 }
+export default Services;

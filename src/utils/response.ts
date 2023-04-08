@@ -1,7 +1,7 @@
 import { Response } from 'express';
 import { isJsonString, malform } from './helper';
 
-export class ResponseData {
+class ResponseData {
   /* Response failed */
   public failed = async (
     value: any,
@@ -55,3 +55,4 @@ export class ResponseData {
     res.send(data);
   };
 }
+export default ResponseData;

@@ -1,13 +1,13 @@
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
-import { Service } from './service';
-import { ResponseData } from '@/utils/response';
+import Services from './service';
+import ResponseData from '@/utils/response';
 
-export class Validation {
-  services: Service;
+class Validation {
+  services: Services;
   response: ResponseData;
   constructor() {
-    this.services = new Service();
+    this.services = new Services();
     this.response = new ResponseData();
   }
 
@@ -29,3 +29,4 @@ export class Validation {
       }
     };
 }
+export default Validation;

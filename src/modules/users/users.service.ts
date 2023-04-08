@@ -1,9 +1,9 @@
 import type { Request, Response } from 'express';
 import { Prisma, PrismaClient } from '@prisma/client';
 import prisma from '@/lib/prisma';
-import { ResponseData } from '@/utils/response';
 import Message from '@/utils/message';
 import ApiPost from '@/lib/api/service/post';
+import ResponseData from '@/utils/response';
 
 export default class UserService {
   prisma: PrismaClient;
@@ -88,6 +88,26 @@ export default class UserService {
       }
 
       await this.response.success(user, 'success', this.res);
+    } catch (e) {
+      console.log(e);
+      await this.response.failed({}, e.message, this.res);
+    }
+  };
+
+  public update = async () => {
+    const { id } = this.params;
+    try {
+      await this.response.success(id, 'success', this.res);
+    } catch (e) {
+      console.log(e);
+      await this.response.failed({}, e.message, this.res);
+    }
+  };
+
+  public delete = async () => {
+    const { id } = this.params;
+    try {
+      await this.response.success(id, 'success', this.res);
     } catch (e) {
       console.log(e);
       await this.response.failed({}, e.message, this.res);

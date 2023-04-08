@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export class UserSchema {
+class UserSchema {
   message = 'Tidak Boleh Kosong';
 
   public post = z.object({
@@ -14,3 +14,4 @@ export class UserSchema {
     }),
   });
 }
+export default UserSchema;

@@ -2,7 +2,7 @@ import { Response, type Request } from 'express';
 import { type users } from '@prisma/client';
 import UserService from './users.service';
 import { type CustomResponse } from '@/types/common.type';
-import { ResponseData } from '@/utils/response';
+import ResponseData from '@/utils/response';
 
 class UserController {
   response: ResponseData;
@@ -32,6 +32,24 @@ class UserController {
     const service: UserService = new UserService(req, res);
     try {
       await service.detail();
+    } catch (e) {
+      await this.response.failed('', 'failed', res);
+    }
+  };
+
+  public update = async (req: Request, res: Response) => {
+    const service: UserService = new UserService(req, res);
+    try {
+      await service.update();
+    } catch (e) {
+      await this.response.failed('', 'failed', res);
+    }
+  };
+
+  public delete = async (req: Request, res: Response) => {
+    const service: UserService = new UserService(req, res);
+    try {
+      await service.delete();
     } catch (e) {
       await this.response.failed('', 'failed', res);
     }
