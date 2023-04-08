@@ -1,7 +1,7 @@
-import { ResponseData } from '@/utils/response';
 import { NextFunction, Request, Response } from 'express';
 import { AnyZodObject } from 'zod';
 import { Service } from './service';
+import { ResponseData } from '@/utils/response';
 
 export class Validation {
   services: Service;
@@ -22,9 +22,7 @@ export class Validation {
             params: req.params,
           });
         }
-        req.app.locals.services = {
-          post: this.services.service_post.post,
-        };
+        await this.services.saveService(req);
         next();
       } catch (e) {
         await this.response.failed(e, 'failed', res);

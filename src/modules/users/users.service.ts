@@ -14,6 +14,7 @@ export default class UserService {
   response: ResponseData;
   message: Message;
   servicesPost: ApiPost;
+  services: any;
   constructor(req: Request, res: Response) {
     this.prisma = prisma;
     this.req = req;
@@ -22,10 +23,11 @@ export default class UserService {
     this.params = req.params;
     this.response = new ResponseData();
     this.message = new Message();
-    this.servicesPost = req.app.locals.services.post;
+    this.services = req.app.locals.services;
+    this.servicesPost = this.services.post;
   }
 
-  create = async () => {
+  public create = async () => {
     const { name, email, phone } = this.body;
     const payload: Prisma.usersCreateArgs = {
       data: {
@@ -39,7 +41,7 @@ export default class UserService {
     await this.response.success(null, 'success', this.res);
   };
 
-  list = async () => {
+  public list = async () => {
     const { search, sort, sort_field } = this.req.query;
     const filterRepo: Prisma.usersFindManyArgs = {};
     const pages: number = Number(this.req.query.page) || 1;
@@ -73,7 +75,7 @@ export default class UserService {
     await this.response.success(result, 'success', this.res);
   };
 
-  detail = async () => {
+  public detail = async () => {
     const { id } = this.params;
     try {
       const user = await this.prisma.users.findUnique({ where: { id } });
