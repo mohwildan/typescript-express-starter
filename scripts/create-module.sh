@@ -14,6 +14,8 @@ mkdir -p src/modules/"$module_name"
 echo "Created folder:
    $(green_bold "src/modules/"$module_name"")
 "
+name=${module_name}
+name=`echo ${name:0:1} | tr  '[a-z]' '[A-Z]'`${name:1}
 # Creating files
 cd src/modules/"$module_name" || exit
 touch "$module_name".controller.ts "$module_name".service.ts "$module_name".route.ts
@@ -23,7 +25,7 @@ import prisma from '@/lib/prisma';
 import Message from '@/utils/message';
 import ResponseData from '@/utils/response';
 
-export default class ${module_name}Service {
+export default class ${name}Service {
   prisma: PrismaClient;
   req: Request;
   res: Response;
@@ -116,17 +118,17 @@ export default class ${module_name}Service {
   };
 }" >> "$module_name.service.ts"
 echo "import { Response, type Request } from 'express';
-import ${module_name}Service from './$module_name.service';
+import ${name}Service from './$module_name.service';
 import ResponseData from '@/utils/response';
 
-class ${module_name}Controller {
+class ${name}Controller {
   response: ResponseData;
   constructor() {
     this.response = new ResponseData();
   }
 
   public create = async (req: Request, res: Response) => {
-    const service: ${module_name}Service = new ${module_name}Service(req, res);
+    const service: ${name}Service = new ${name}Service(req, res);
     try {
       await service.create();
     } catch (e) {
@@ -135,7 +137,7 @@ class ${module_name}Controller {
   };
 
   public list = async (req: Request, res: Response) => {
-    const service: ${module_name}Service = new ${module_name}Service(req, res);
+    const service: ${name}Service = new ${name}Service(req, res);
     try {
       await service.list();
     } catch (e) {
@@ -144,7 +146,7 @@ class ${module_name}Controller {
   };
 
   public detail = async (req: Request, res: Response) => {
-    const service: ${module_name}Service = new ${module_name}Service(req, res);
+    const service: ${name}Service = new ${name}Service(req, res);
     try {
       await service.detail();
     } catch (e) {
@@ -153,7 +155,7 @@ class ${module_name}Controller {
   };
 
   public update = async (req: Request, res: Response) => {
-    const service: ${module_name}Service = new ${module_name}Service(req, res);
+    const service: ${name}Service = new ${name}Service(req, res);
     try {
       await service.update();
     } catch (e) {
@@ -162,7 +164,7 @@ class ${module_name}Controller {
   };
 
   public delete = async (req: Request, res: Response) => {
-    const service: ${module_name}Service = new ${module_name}Service(req, res);
+    const service: ${name}Service = new ${name}Service(req, res);
     try {
       await service.delete();
     } catch (e) {
@@ -170,16 +172,16 @@ class ${module_name}Controller {
     }
   };
 }
-export default ${module_name}Controller;" >> "$module_name.controller.ts"
+export default ${name}Controller;" >> "$module_name.controller.ts"
 echo "import { Router } from 'express';
-import ${module_name}Controller from './${module_name}.controller';
-import ${module_name}Schema from '@/schema/user.schema';
+import ${name}Controller from './${module_name}.controller';
+import ${name}Schema from '@/schema/user.schema';
 import Validation from '@/middlewares/validation';
 
 const users: Router = Router();
-const controller = new ${module_name}Controller();
+const controller = new ${name}Controller();
 const { validation } = new Validation();
-const schema = new ${module_name}Schema();
+const schema = new ${name}Schema();
 
 users.post('/create', validation(schema.post), controller.create);
 users.get('/list', validation(null), controller.list);
@@ -189,7 +191,6 @@ users.delete('/delete/:id', validation(null), controller.delete);
 
 export default users;" >> "$module_name.route.ts"
 echo -e "Created:
-  $(green_bold ""$module_name".controller.ts")
   $(green_bold ""$module_name".controller.ts")
   $(green_bold ""$module_name".service.ts")
   $(green_bold ""$module_name".route.ts")
