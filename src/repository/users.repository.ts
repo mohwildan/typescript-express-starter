@@ -26,11 +26,11 @@ export default class UsersRepository {
 
     // pagination
     if (
-      Object.prototype.hasOwnProperty.call(options, 'take') &&
+      Object.prototype.hasOwnProperty.call(options, 'limit') &&
       Object.prototype.hasOwnProperty.call(options, 'skip')
     ) {
-      if (options.take !== -1) {
-        args.take = options.take;
+      if (options.limit !== -1) {
+        args.take = options.limit;
         args.skip = options.skip;
       }
     }

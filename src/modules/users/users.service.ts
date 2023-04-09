@@ -59,7 +59,7 @@ export default class UserService {
       filterRepo.sortField = sort_field;
     }
 
-    filterRepo.take = limit;
+    filterRepo.limit = limit;
     filterRepo.skip = skip;
     const { list, total } = await usersRepos.UsersListRepository(filterRepo);
     const result = {
