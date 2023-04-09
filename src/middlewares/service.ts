@@ -1,5 +1,5 @@
 import { Request } from 'express';
-import { HttpContext } from '../lib/api/httpContext';
+import { HttpContext } from '../lib/api/http-context';
 
 class Services {
   service_post = new HttpContext({

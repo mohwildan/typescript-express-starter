@@ -1,6 +1,6 @@
 import { Prisma } from '@prisma/client';
 export default class MiddelwarePrisma {
-  static softDelete = async (
+  public softDelete = async (
     params: Prisma.MiddlewareParams,
     next: (params: Prisma.MiddlewareParams) => Promise<any>
   ) => {

@@ -34,7 +34,7 @@ class ApiClient {
 
   constructor(opt: ApiClientOptions) {
     this.baseUrl = opt.baseUrl;
-    this.rpc = opt.rpc || axios;
+    this.rpc = opt.rpc ?? axios;
 
     const agent = new https.Agent({
       rejectUnauthorized: false,

@@ -1,3 +1,3 @@
 export * from './core/index';
-export * from './httpContext';
+export * from './http-context';
 export * from './interfaces';

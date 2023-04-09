@@ -4,6 +4,7 @@ import prisma from '@/lib/prisma';
 import Message from '@/utils/message';
 import ApiPost from '@/lib/api/service/post';
 import ResponseData from '@/utils/response';
+import UsersRepository from '@/repository/users.repository';
 
 export default class UserService {
   prisma: PrismaClient;
@@ -42,33 +43,29 @@ export default class UserService {
   };
 
   public list = async () => {
+    const usersRepos = new UsersRepository();
     const { search, sort, sort_field } = this.req.query;
-    const filterRepo: Prisma.usersFindManyArgs = {};
+    const filterRepo: Record<string, any> = {};
     const pages: number = Number(this.req.query.page) || 1;
     const limit: number = Number(this.req.query.limit) || 10;
     const skip: number = (pages - 1) * limit;
 
     if (typeof search !== 'undefined') {
-      filterRepo.where = {
-        name: {
-          contains: search as string,
-        },
-      };
+      filterRepo.q = search;
     }
 
     if (typeof sort !== 'undefined' && typeof sort_field !== 'undefined') {
-      filterRepo.orderBy = {
-        [sort_field as Prisma.UsersScalarFieldEnum]: sort,
-      };
+      filterRepo.sort = sort;
+      filterRepo.sortField = sort_field;
     }
 
     filterRepo.take = limit;
     filterRepo.skip = skip;
-    const list = await this.prisma.users.findMany(filterRepo);
+    const { list, total } = await usersRepos.UsersListRepository(filterRepo);
     const result = {
       list,
-      total_page: Math.ceil(list.length / limit),
-      total_data: list.length,
+      total_page: Math.ceil(total / limit),
+      total_data: total,
       page: pages,
       limit,
     };

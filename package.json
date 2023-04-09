@@ -21,6 +21,7 @@
     "prisma:studio": "npx prisma studio",
     "check:types": "tsc --noEmit",
     "commit": "git-cz",
+    "module":"make module",
     "test": "jest",
     "test:e2e": "jest -c jest.config.e2e.ts",
     "test:integration": "jest -c jest.config.integration.ts",

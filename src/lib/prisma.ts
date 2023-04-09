@@ -2,5 +2,6 @@ import { PrismaClient } from '@prisma/client';
 import MiddelwarePrisma from '@/middlewares/prisma';
 const prisma = new PrismaClient();
 
-prisma.$use(MiddelwarePrisma.softDelete);
+const middlewares = new MiddelwarePrisma();
+prisma.$use(middlewares.softDelete);
 export default prisma;
