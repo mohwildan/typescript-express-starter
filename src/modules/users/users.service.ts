@@ -107,7 +107,10 @@ export default class UserService {
   public delete = async () => {
     const { id } = this.params;
     try {
-      await this.response.success(id, 'success', this.res);
+      await this.prisma.users.delete({
+        where: { id },
+      });
+      await this.response.success({}, 'success', this.res);
     } catch (e) {
       console.log(e);
       await this.response.failed({}, e.message, this.res);

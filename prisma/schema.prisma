@@ -15,4 +15,8 @@ model users {
   email String
   name  String 
   phone String? 
+  deleted Boolean @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  deletedAt DateTime?
 }
