@@ -190,8 +190,64 @@ users.put('/update/:id', validation(null), controller.update);
 users.delete('/delete/:id', validation(null), controller.delete);
 
 export default users;" >> "$module_name.route.ts"
+
+cd ../../repository || exit
+
+echo "import { Prisma, PrismaClient } from '@prisma/client';
+import prisma from '@/lib/prisma';
+
+export default class ${name}Repository {
+  private readonly prisma: PrismaClient = prisma;
+
+  private generateSlug(options: Record<string, any>) {
+    const args: Prisma.${module_name}FindManyArgs = {};
+    if (Object.prototype.hasOwnProperty.call(options, 'q') && options.q) {
+      args.where = {
+        name: {
+          contains: options.q,
+        },
+      };
+    }
+
+    // sort
+    if (
+      Object.prototype.hasOwnProperty.call(options, 'sort') &&
+      Object.prototype.hasOwnProperty.call(options, 'sortField')
+    ) {
+      args.orderBy = {
+        [options.sortField as Prisma.${module_name}ScalarFieldEnum]: options.sort,
+      };
+    }
+
+    // pagination
+    if (
+      Object.prototype.hasOwnProperty.call(options, 'limit') &&
+      Object.prototype.hasOwnProperty.call(options, 'skip')
+    ) {
+      if (options.limit !== -1) {
+        args.take = options.limit;
+        args.skip = options.skip;
+      }
+    }
+    return args;
+  }
+
+  public ${name}ListRepository = async (
+    options: Record<string, any>
+  ): Promise<any> => {
+    try {
+      const findOptions: Prisma.usersFindManyArgs = this.generateSlug(options);
+      const list = await this.prisma.${module_name}.findMany(findOptions);
+      const count = await this.prisma.${module_name}.count(findOptions as any);
+      return { list, total: count };
+    } catch (e) {
+      throw new Error(e.message);
+    }
+  };
+}" >> "$module_name.repository.ts"
 echo -e "Created:
   $(green_bold ""$module_name".controller.ts")
   $(green_bold ""$module_name".service.ts")
   $(green_bold ""$module_name".route.ts")
+  $(green_bold ""$module_name".repository.ts")
 "

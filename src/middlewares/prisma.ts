@@ -13,6 +13,11 @@ export default class MiddelwarePrisma {
         deleted: false,
       };
     }
+    if (params.action === 'count') {
+      params.args.where = {
+        deleted: false,
+      };
+    }
     return await next(params);
   };
 }
