@@ -35,6 +35,7 @@ export default class UserService {
         name,
         email,
         phone,
+        deletedAt: null,
       },
     };
 

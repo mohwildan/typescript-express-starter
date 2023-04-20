@@ -6,16 +6,11 @@ export default class MiddelwarePrisma {
   ) => {
     if (params.action === 'delete') {
       params.action = 'update';
-      params.args.data = { deletedAt: new Date(), deleted: true };
+      params.args.data = { deletedAt: new Date() };
     }
-    if (params.action === 'findMany') {
+    if (params.action === 'findMany' || params.action === 'count') {
       params.args.where = {
-        deleted: false,
-      };
-    }
-    if (params.action === 'count') {
-      params.args.where = {
-        deleted: false,
+        deletedAt: null,
       };
     }
     return await next(params);
