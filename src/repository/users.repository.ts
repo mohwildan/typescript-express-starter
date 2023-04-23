@@ -43,7 +43,7 @@ export default class UsersRepository {
     try {
       const findOptions: Prisma.usersFindManyArgs = this.generateSlug(options);
       const list = await this.prisma.users.findMany(findOptions);
-      const count = await this.prisma.users.count(findOptions as any);
+      const count = await this.prisma.users.count({});
       return { list, total: count };
     } catch (e) {
       throw new Error(e.message);
