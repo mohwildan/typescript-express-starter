@@ -12,17 +12,6 @@ interface AppConfig {
      */
     version: string;
   };
-  docs: {
-    /**
-     * Swagger ui path
-     */
-    swaggerUIPath: string;
-
-    /**
-     * Open api specs path
-     */
-    apiDocsPath: string;
-  };
   logs: {
     /**
      * Folder where log files would be saved
@@ -46,10 +35,6 @@ const appConfig: AppConfig = {
   api: {
     basePath: 'api',
     version: 'v1',
-  },
-  docs: {
-    swaggerUIPath: '/v1/swagger',
-    apiDocsPath: '/v1/api-docs',
   },
   logs: {
     dir: './logs',
